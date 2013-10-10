@@ -2143,12 +2143,12 @@ ROS3D.MeshResource = function(options) {
       if(collada.dae.asset.unit) {
         var scale = collada.dae.asset.unit;
         collada.scene.scale = new THREE.Vector3(scale, scale, scale);
-          collada.threejs.materials.forEach(
+        collada.threejs.materials.forEach(
               function(element) {
                   if (color !== null) {
-                      element.color.r = (color & 0xff0000);
-                      element.color.g = (color & 0x00ff00);
-                      element.color.b = (color & 0x0000ff);
+                      element.emissive.r = (color & 0xff0000) / (255.0 * 256.0 * 256.0);
+                      element.emissive.g = (color & 0x00ff00) / (255.0 * 256.0);
+                      element.emissive.b = (color & 0x0000ff) / 255.0;
                   }
               });
       }
