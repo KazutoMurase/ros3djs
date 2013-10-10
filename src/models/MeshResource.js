@@ -20,6 +20,7 @@ ROS3D.MeshResource = function(options) {
   var path = options.path || '/';
   var resource = options.resource;
   var material = options.material || null;
+  var color = options.color || null;
   this.warnings = options.warnings;
 
   THREE.Object3D.call(this);
@@ -45,6 +46,14 @@ ROS3D.MeshResource = function(options) {
       if(collada.dae.asset.unit) {
         var scale = collada.dae.asset.unit;
         collada.scene.scale = new THREE.Vector3(scale, scale, scale);
+          collada.threejs.materials.forEach(
+              function(element) {
+                  if (color !== null) {
+                      element.color.r = (color & 0xff0000);
+                      element.color.g = (color & 0x00ff00);
+                      element.color.b = (color & 0x0000ff);
+                  }
+              });
       }
 
       if(material !== null) {
@@ -56,10 +65,8 @@ ROS3D.MeshResource = function(options) {
             }
           }
         };
-
         setMaterial(collada.scene, material);
       }
-
       that.add(collada.scene);
     });
   }

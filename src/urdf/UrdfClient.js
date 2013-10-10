@@ -25,7 +25,8 @@ ROS3D.UrdfClient = function(options) {
   var param = options.param || 'robot_description';
   this.path = options.path || '/';
   this.tfClient = options.tfClient;
-  this.tfPrefix = options.tfPrefix || '';
+  this.tfPrefix = options.tfPrefix || null;
+  this.color = options.color || null;
   this.rootObject = options.rootObject || new THREE.Object3D();
 
   // get the URDF value from ROS
@@ -44,7 +45,8 @@ ROS3D.UrdfClient = function(options) {
       urdfModel : urdfModel,
       path : that.path,
       tfPrefix : that.tfPrefix,
-      tfClient : that.tfClient
+      tfClient : that.tfClient,
+      color : that.color
     }));
   });
 };

@@ -17,7 +17,8 @@ ROS3D.Urdf = function(options) {
   var urdfModel = options.urdfModel;
   var path = options.path || '/';
   var tfClient = options.tfClient;
-  var tfPrefix = options.tfPrefix || '';
+  var tfPrefix = options.tfPrefix || null;
+  var color = options.color || null;
 
   THREE.Object3D.call(this);
   this.useQuaternion = true;
@@ -29,7 +30,7 @@ ROS3D.Urdf = function(options) {
     if (link.visual && link.visual.geometry) {
       if (link.visual.geometry.type === ROSLIB.URDF_MESH) {
         var frameID;
-        if (tfPrefix !== '') {
+        if (tfPrefix !== null) {
             frameID = '/' + tfPrefix + '/' + link.name;
         }
         else {
@@ -43,7 +44,8 @@ ROS3D.Urdf = function(options) {
           // create the model
           var mesh = new ROS3D.MeshResource({
             path : path,
-            resource : uri.substring(10)
+            resource : uri.substring(10),
+            color : color
           });
           
           // check for a scale
