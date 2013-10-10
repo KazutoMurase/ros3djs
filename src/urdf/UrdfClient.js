@@ -25,6 +25,7 @@ ROS3D.UrdfClient = function(options) {
   var param = options.param || 'robot_description';
   this.path = options.path || '/';
   this.tfClient = options.tfClient;
+  this.tfPrefix = options.tfPrefix || '';
   this.rootObject = options.rootObject || new THREE.Object3D();
 
   // get the URDF value from ROS
@@ -42,6 +43,7 @@ ROS3D.UrdfClient = function(options) {
     that.rootObject.add(new ROS3D.Urdf({
       urdfModel : urdfModel,
       path : that.path,
+      tfPrefix : that.tfPrefix,
       tfClient : that.tfClient
     }));
   });

@@ -17,6 +17,7 @@ ROS3D.Urdf = function(options) {
   var urdfModel = options.urdfModel;
   var path = options.path || '/';
   var tfClient = options.tfClient;
+  var tfPrefix = options.tfPrefix || '';
 
   THREE.Object3D.call(this);
   this.useQuaternion = true;
@@ -27,7 +28,13 @@ ROS3D.Urdf = function(options) {
     var link = links[l];
     if (link.visual && link.visual.geometry) {
       if (link.visual.geometry.type === ROSLIB.URDF_MESH) {
-        var frameID = '/' + link.name;
+        var frameID;
+        if (tfPrefix !== '') {
+            frameID = '/' + tfPrefix + '/' + link.name;
+        }
+        else {
+            frameID = '/' + link.name;
+        }
         var uri = link.visual.geometry.filename;
         var fileType = uri.substr(-4).toLowerCase();
 

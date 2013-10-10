@@ -1884,8 +1884,8 @@ ROS3D.MarkerClient = function(options) {
   this.tfClient = options.tfClient;
   this.rootObject = options.rootObject || new THREE.Object3D();
 
-  // current marker that is displayed
-  this.currentMarker = null;
+  // Markers that are displayed (Map id--Marker)
+  this.markers = {};
 
   // subscribe to the topic
   var rosTopic = new ROSLIB.Topic({
@@ -1895,21 +1895,18 @@ ROS3D.MarkerClient = function(options) {
     compression : 'png'
   });
   rosTopic.subscribe(function(message) {
+
     var newMarker = new ROS3D.Marker({
       message : message
     });
-    // check for an old marker
-    if (that.currentMarker) {
-      that.rootObject.remove(that.currentMarker);
-    }
 
-    that.currentMarker = new ROS3D.SceneNode({
+    that.markers[message.id] = new ROS3D.SceneNode({
       frameID : message.header.frame_id,
       tfClient : that.tfClient,
       object : newMarker
     });
-    that.rootObject.add(that.currentMarker);
-    
+    that.rootObject.add(that.markers[message.id]);
+
     that.emit('change');
   });
 };
@@ -2263,6 +2260,7 @@ ROS3D.Urdf = function(options) {
   var urdfModel = options.urdfModel;
   var path = options.path || '/';
   var tfClient = options.tfClient;
+  var tfPrefix = options.tfPrefix || '';
 
   THREE.Object3D.call(this);
   this.useQuaternion = true;
@@ -2273,7 +2271,13 @@ ROS3D.Urdf = function(options) {
     var link = links[l];
     if (link.visual && link.visual.geometry) {
       if (link.visual.geometry.type === ROSLIB.URDF_MESH) {
-        var frameID = '/' + link.name;
+        var frameID;
+        if (tfPrefix !== '') {
+            frameID = '/' + tfPrefix + '/' + link.name;
+        }
+        else {
+            frameID = '/' + link.name;
+        }
         var uri = link.visual.geometry.filename;
         var fileType = uri.substr(-4).toLowerCase();
 
@@ -2336,6 +2340,7 @@ ROS3D.UrdfClient = function(options) {
   var param = options.param || 'robot_description';
   this.path = options.path || '/';
   this.tfClient = options.tfClient;
+  this.tfPrefix = options.tfPrefix || '';
   this.rootObject = options.rootObject || new THREE.Object3D();
 
   // get the URDF value from ROS
@@ -2353,6 +2358,7 @@ ROS3D.UrdfClient = function(options) {
     that.rootObject.add(new ROS3D.Urdf({
       urdfModel : urdfModel,
       path : that.path,
+      tfPrefix : that.tfPrefix,
       tfClient : that.tfClient
     }));
   });
