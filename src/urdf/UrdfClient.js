@@ -28,6 +28,7 @@ ROS3D.UrdfClient = function(options) {
   this.tfPrefix = options.tfPrefix || null;
   this.color = options.color || null;
   this.rootObject = options.rootObject || new THREE.Object3D();
+  this.model = null;
 
   // get the URDF value from ROS
   var getParam = new ROSLIB.Param({
@@ -39,14 +40,18 @@ ROS3D.UrdfClient = function(options) {
     var urdfModel = new ROSLIB.UrdfModel({
       string : string
     });
-
-    // load all models
-    that.rootObject.add(new ROS3D.Urdf({
+   that.model = new ROS3D.Urdf({
       urdfModel : urdfModel,
       path : that.path,
       tfPrefix : that.tfPrefix,
       tfClient : that.tfClient,
       color : that.color
-    }));
+    });
+    // load all models
+    that.rootObject.add(that.model);
   });
+};
+
+ROS3D.UrdfClient.prototype.remove = function(){
+    this.rootObject.remove(this.model);
 };
