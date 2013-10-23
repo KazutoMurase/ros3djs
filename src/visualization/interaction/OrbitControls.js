@@ -413,6 +413,10 @@ ROS3D.OrbitControls.prototype.zoomOut = function(zoomScale) {
   this.scale *= zoomScale;
 };
 
+ROS3D.OrbitControls.prototype.transCenter = function(delta) {
+    this.center.add(delta);
+};
+
 /**
  * Update the camera to the current settings.
  */

@@ -2578,6 +2578,9 @@ ROS3D.Viewer.prototype.addObject = function(object, selectable) {
   }
 };
 
+ROS3D.Viewer.prototype.transCenter = function(delta) {
+    this.cameraControls.transCenter(delta);
+};
 /**
  * @author David Gossow - dgossow@willowgarage.com
  */
@@ -3283,6 +3286,10 @@ ROS3D.OrbitControls.prototype.zoomOut = function(zoomScale) {
     zoomScale = Math.pow(0.95, this.userZoomSpeed);
   }
   this.scale *= zoomScale;
+};
+
+ROS3D.OrbitControls.prototype.transCenter = function(delta) {
+    this.center.add(delta);
 };
 
 /**

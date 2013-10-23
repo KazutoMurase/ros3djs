@@ -119,3 +119,7 @@ ROS3D.Viewer.prototype.addObject = function(object, selectable) {
     this.scene.add(object);
   }
 };
+
+ROS3D.Viewer.prototype.transCenter = function(delta) {
+    this.cameraControls.transCenter(delta);
+};
