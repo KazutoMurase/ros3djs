@@ -2546,8 +2546,7 @@ ROS3D.Viewer = function(options) {
     that.cameraControls.update();
 
     // put light to the top-left of the camera
-      console.log(that.lightPosition);
-      that.directionalLight.position = that.camera.localToWorld(
+    that.directionalLight.position = that.camera.localToWorld(
           new THREE.Vector3(that.lightPosition.x || -1,
                             that.lightPosition.y || 1,
                             that.lightPosition.z || 0));
