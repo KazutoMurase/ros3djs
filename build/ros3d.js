@@ -1315,7 +1315,8 @@ ROS3D.InteractiveMarkerHandle.prototype.sendFeedback = function(eventType, click
             z : pos.z
 	};
     }
-    if(eventType !== ROS3D.INTERACTIVE_MARKER_MOUSE_DOWN) {
+    if(eventType !== ROS3D.INTERACTIVE_MARKER_MOUSE_DOWN &&
+       eventType !== ROS3D.INTERACTIVE_MARKER_MOUSE_UP) {
 	this.clickPosition = undefined;
     }
 
