@@ -2364,6 +2364,7 @@ ROS3D.UrdfClient = function(options) {
   options = options || {};
   var ros = options.ros;
   var param = options.param || 'robot_description';
+  var hidden = options.hidden || false;
   this.path = options.path || '/';
   this.tfClient = options.tfClient;
   this.tfPrefix = options.tfPrefix || null;
@@ -2389,8 +2390,14 @@ ROS3D.UrdfClient = function(options) {
       color : that.color
     });
     // load all models
-    that.rootObject.add(that.model);
+    if(!hidden) {
+	that.rootObject.add(that.model);
+    }
   });
+};
+
+ROS3D.UrdfClient.prototype.add = function(){
+    this.rootObject.add(this.model);
 };
 
 ROS3D.UrdfClient.prototype.remove = function(){
