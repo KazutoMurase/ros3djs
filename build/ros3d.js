@@ -2489,6 +2489,11 @@ ROS3D.Viewer = function(options) {
     y : 3,
     z : 3
   };
+  this.lightPosition = options.lightPose || {
+    x : 1,
+    y : -1,
+    z : 0
+  };
 
   // create the canvas to render to
   this.renderer = new THREE.WebGLRenderer({
@@ -2505,9 +2510,7 @@ ROS3D.Viewer = function(options) {
 
   // create the global camera
   this.camera = new THREE.PerspectiveCamera(40, width / height, 0.01, 1000);
-  this.camera.position.x = cameraPosition.x;
-  this.camera.position.y = cameraPosition.y;
-  this.camera.position.z = cameraPosition.z;
+  this.camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
   // add controls to the camera
   this.cameraControls = new ROS3D.OrbitControls({
     scene : this.scene,
@@ -2543,7 +2546,11 @@ ROS3D.Viewer = function(options) {
     that.cameraControls.update();
 
     // put light to the top-left of the camera
-    that.directionalLight.position = that.camera.localToWorld(new THREE.Vector3(-1, 1, 0));
+      console.log(that.lightPosition);
+      that.directionalLight.position = that.camera.localToWorld(
+          new THREE.Vector3(that.lightPosition.x || -1,
+                            that.lightPosition.y || 1,
+                            that.lightPosition.z || 0));
     that.directionalLight.position.normalize();
 
     // set the scene
@@ -2578,8 +2585,16 @@ ROS3D.Viewer.prototype.addObject = function(object, selectable) {
   }
 };
 
-ROS3D.Viewer.prototype.transCenter = function(delta) {
-    this.cameraControls.transCenter(delta);
+ROS3D.Viewer.prototype.setCenter = function(position) {
+    this.cameraControls.setCenter(position);
+};
+
+ROS3D.Viewer.prototype.setCamera = function(position) {
+    this.camera.position.set(position.x, position.y, position.z);
+};
+
+ROS3D.Viewer.prototype.setLight = function(position) {
+    this.lightPosition = position;
 };
 /**
  * @author David Gossow - dgossow@willowgarage.com
@@ -3288,8 +3303,9 @@ ROS3D.OrbitControls.prototype.zoomOut = function(zoomScale) {
   this.scale *= zoomScale;
 };
 
-ROS3D.OrbitControls.prototype.transCenter = function(delta) {
-    this.center.add(delta);
+ROS3D.OrbitControls.prototype.setCenter = function(position) {
+    this.center.set(0, 0, 0);
+    this.center.add(position);
 };
 
 /**

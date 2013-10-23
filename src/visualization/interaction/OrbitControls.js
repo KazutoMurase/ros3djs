@@ -413,8 +413,9 @@ ROS3D.OrbitControls.prototype.zoomOut = function(zoomScale) {
   this.scale *= zoomScale;
 };
 
-ROS3D.OrbitControls.prototype.transCenter = function(delta) {
-    this.center.add(delta);
+ROS3D.OrbitControls.prototype.setCenter = function(position) {
+    this.center.set(0, 0, 0);
+    this.center.add(position);
 };
 
 /**
